@@ -2,7 +2,8 @@
 
 Create an Extract Transform Load pipeline using python and automate with airflow.
 
-![Screenshot 2025-05-05 223629](https://github.com/user-attachments/assets/2da73bdb-45d0-4117-b866-d467b9700e05)
+![Screenshot 2025-05-07 172733](https://github.com/user-attachments/assets/3ea2baaa-ee03-41a6-9ee2-0b072e238c5a)
+
 
 
 # Tech Stack / Skill used:
