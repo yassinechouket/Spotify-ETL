@@ -1,0 +1,108 @@
+#version: "3.9"
+
+#services:
+  #db:
+    #image: postgres:latest
+    #restart: always
+    #environment:
+      #POSTGRES_USER: postgres
+      #POSTGRES_PASSWORD: yes_it_is
+      #POSTGRES_DB: Spotify
+    #ports:
+      #- "5432:5432"
+    #volumes:
+      #- pgdata:/var/lib/postgresql/data
+
+  #elt_pipeline:
+    #build: .
+    #depends_on:
+      #- db
+    #environment:
+      #DB_HOST: db
+      #DB_NAME: Spotify
+      #DB_USER: postgres
+      #DB_PASSWORD: yes_it_is
+      #DB_PORT: 5432  
+    #volumes:
+      #- .:/app
+    #command: python load.py
+
+#volumes:
+  #pgdata:
+
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: yes_it_is
+      POSTGRES_DB: Spotify
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  airflow-init:
+    image: apache/airflow:2.9.0
+    container_name: airflow-init
+    depends_on:
+      - postgres
+    environment:
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:yes_it_is@postgres:5432/Spotify
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__FERNET_KEY: '9hxAnT_otRHXC1oKQcBJx5HsoKi0o5XtdxhQI3J_clU='
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'False'
+      AIRFLOW__WEBSERVER__SECRET_KEY: 'aSuperSecretKey1234'
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - /etc/localtime:/etc/localtime:ro
+    entrypoint: >
+      bash -c "
+      airflow db init &&
+      airflow users create --username yassine --password yass2003 --firstname yassine --lastname chouket --role Admin --email medyassinechouket.2@gmail.com
+      "
+
+  webserver:
+    image: apache/airflow:2.9.0
+    container_name: airflow_webserver
+    restart: always
+    depends_on:
+      - postgres
+      - airflow-init
+    ports:
+      - "8080:8080"
+    environment:
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:yes_it_is@postgres:5432/Spotify
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__FERNET_KEY: '9hxAnT_otRHXC1oKQcBJx5HsoKi0o5XtdxhQI3J_clU='
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'False'
+      AIRFLOW__WEBSERVER__SECRET_KEY: 'aSuperSecretKey1234'
+      AIRFLOW__LOGGING__REMOTE_LOGGING: 'False'
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - /etc/localtime:/etc/localtime:ro
+    command: webserver
+
+  scheduler:
+    image: apache/airflow:2.9.0
+    container_name: airflow_scheduler
+    restart: always
+    depends_on:
+      - webserver
+    environment:
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:yes_it_is@postgres:5432/Spotify
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__FERNET_KEY: '9hxAnT_otRHXC1oKQcBJx5HsoKi0o5XtdxhQI3J_clU='
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'False'
+      AIRFLOW__WEBSERVER__SECRET_KEY: 'aSuperSecretKey1234'
+      AIRFLOW__LOGGING__REMOTE_LOGGING: 'False'
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - /etc/localtime:/etc/localtime:ro
+    command: scheduler
+
+volumes:
+  postgres_data:
