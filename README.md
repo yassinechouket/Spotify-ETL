@@ -1,4 +1,4 @@
-# 🎧Data Engineering Project-2|Building Spotify ETL using Python and Airflow
+# 🎧Data Engineering Project |Building Spotify ETL using Python and Airflow
 
 Create an Extract Transform Load pipeline using python and automate with airflow.
 
@@ -60,7 +60,7 @@ In this Python File will write a logic to extract data from API → Do Quality C
 1.  **def spotify_etl()**  → Core function which returns the Data Frame to the DAG python file.
 2.  This file needs to be placed inside the dags folder
 
-## spotify_final_dag.py
+## dag.py
 
 This is the most important section you need to pay attention to. First, learn the basics about airflow DAG’s  [here](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html)  it might take around 15 mins or you can search for it on youtube. After the basics please follow the below guideline.
 
