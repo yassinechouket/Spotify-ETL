@@ -53,7 +53,7 @@ So inside our dag, we need to create tasks to get our job done. To keep it simpl
 
 ![Screenshot 2025-05-07 171406](https://github.com/user-attachments/assets/1e321030-edb5-49ac-b124-24715cf4966d)
 
-## spotify_etl.py
+## etl.py
 
 In this Python File will write a logic to extract data from API → Do Quality Checks →Transform Data.
 
