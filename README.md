@@ -48,6 +48,9 @@ Now we are going to extend this with airflow using docker
 
 ![Screenshot 2025-05-07 171120](https://github.com/user-attachments/assets/36c72d3f-fb08-443c-9b38-79a730f1f9a6)
 
+![Screenshot 2025-05-07 174454](https://github.com/user-attachments/assets/db9a7cd2-5a8e-40a2-81ea-186a0491334c)
+
+
 So inside our dag, we need to create tasks to get our job done. To keep it simple I will use two tasks i.e. one to create Postgres Table and another to load the Data to the Table our dag will look like this.
 
 ![Screenshot 2025-05-07 171300](https://github.com/user-attachments/assets/58b34dbe-7320-453d-954c-eee009b2d40d)
